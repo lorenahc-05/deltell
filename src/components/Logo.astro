@@ -1,0 +1,11 @@
+---
+// Wordmark provisional en texto. Cuando haya logo definitivo (SVG), se cambia aquí
+// y se actualiza en header, intro y footer a la vez.
+const letters = 'DELTELL'.split('');
+---
+
+<span class="logo" role="img" aria-label="DELTELL">
+  {letters.map((l) => (
+    <span class="logo__l" aria-hidden="true"><span>{l}</span></span>
+  ))}
+</span>

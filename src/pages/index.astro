@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { shows } from '../data/shows';
+
+const tiles = [
+  { href: '/colecciones', title: 'Colecciones', n: '01', tone: 'tone-ink', hint: 'Archivo' },
+  { href: '/armario-deltell', title: 'Armario DELTELL', n: '02', tone: 'tone-outline', hint: 'Piezas' },
+  { href: '/about-us', title: 'About us', n: '03', tone: 'tone-ink', hint: 'La marca' },
+  { href: '/custom', title: 'Custom', n: '04', tone: 'tone-solid', hint: 'A medida' },
+];
+---
+
+<Base home>
+  <main>
+    <!-- 1 · Portada a pantalla completa -->
+    <section class="hero" aria-label="Portada">
+      <div class="hero__ph">Vídeo de portada · public/video/hero.mp4</div>
+      <video class="hero__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+        <source src="/video/hero.mp4" type="video/mp4" />
+      </video>
+      <span class="hero__scroll">Scroll ↓</span>
+    </section>
+
+    <!-- 2 · Navegación 2x2 -->
+    <section class="tiles" aria-label="Explorar">
+      {tiles.map((t, i) => (
+        <a class={`tile ${t.tone}`} href={t.href} data-reveal style={`--d:${i * 90}ms`}>
+          <span class="tile__top">
+            <span>{t.n}</span>
+            <span>{t.hint}</span>
+          </span>
+          <span class="tile__title">{t.title}</span>
+          <span class="tile__top">
+            <span></span>
+            <span class="tile__arrow" aria-hidden="true">↗</span>
+          </span>
+        </a>
+      ))}
+    </section>
+
+    <!-- 3 · Últimos desfiles -->
+    <section class="section" aria-labelledby="desfiles-title">
+      <div class="section__head">
+        <h2 class="display section__title" id="desfiles-title">Últimos desfiles</h2>
+        <a class="link-arrow" href="/colecciones">Ver todos →</a>
+      </div>
+      <div class="shows">
+        {shows.map((s, i) => (
+          <a class="show" href={`/colecciones#${s.slug}`} data-reveal style={`--d:${i * 70}ms`}>
+            <div class="ph">
+              {s.image && <img src={s.image} alt={s.title} loading="lazy" />}
+            </div>
+            <div class="show__meta">
+              <h3 class="show__title">{s.title}</h3>
+              <span class="show__season">{s.season}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 4 · Contacto -->
+    <ContactSection />
+  </main>
+</Base>

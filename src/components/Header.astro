@@ -1,0 +1,52 @@
+---
+import Logo from './Logo.astro';
+
+interface Props {
+  home?: boolean;
+}
+const { home = false } = Astro.props;
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const links = [
+  { href: '/colecciones', label: 'Colecciones' },
+  { href: '/about-us', label: 'About us' },
+  { href: '/contacto', label: 'Contacto' },
+];
+---
+
+<header class="site-header" data-header {...(home ? { 'data-home': '' } : {})}>
+  {!home && (
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-btn>
+      Menú
+    </button>
+  )}
+
+  <nav class="nav nav--left" aria-label="Principal">
+    {links.map((l) => (
+      <a class="nav__link" href={l.href} aria-current={current === l.href ? 'page' : undefined}>
+        {l.label}
+      </a>
+    ))}
+  </nav>
+
+  <a class="brand" href="/" data-brand aria-label="DELTELL, ir al inicio">
+    <Logo />
+  </a>
+
+  <div class="nav nav--right">
+    <a class="btn tone-outline" href="/armario-deltell">Armario DELTELL</a>
+    <a class="btn tone-solid" href="/custom">Custom</a>
+  </div>
+</header>
+
+{!home && (
+  <div class="mobile-menu" id="mobile-menu" data-menu>
+    {links.map((l) => (
+      <a class="mobile-menu__link" href={l.href}>{l.label}</a>
+    ))}
+    <div class="mobile-menu__btns">
+      <a class="btn tone-outline" href="/armario-deltell">Armario DELTELL</a>
+      <a class="btn tone-solid" href="/custom">Custom</a>
+    </div>
+  </div>
+)}

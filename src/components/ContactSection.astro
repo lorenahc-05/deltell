@@ -1,0 +1,158 @@
+---
+// Sección de contacto reutilizable: se usa en la home (#contacto) y en /contacto.
+// Así, decidir "página o sección" solo es decidir dónde se enlaza.
+interface Props {
+  heading?: 'h1' | 'h2';
+}
+const { heading: Tag = 'h2' } = Astro.props;
+
+const modes = [
+  { id: 'showroom', label: 'Showroom' },
+  { id: 'colaboracion', label: 'Colaboración' },
+  { id: 'informacion', label: 'Información' },
+];
+---
+
+<section class="section" id="contacto" data-contact>
+  <div class="section__head">
+    <Tag class="display section__title">Contacto</Tag>
+    <span class="eyebrow">(04)</span>
+  </div>
+
+  <div class="contact">
+    <div class="contact__intro" data-reveal>
+      <p class="eyebrow">¿En qué podemos ayudarte?</p>
+      <p data-contact-blurb>
+        Elige el motivo y el formulario se adapta.
+      </p>
+    </div>
+
+    <div>
+      <div class="contact__tabs" role="tablist" aria-label="Motivo de contacto">
+        {modes.map((m, i) => (
+          <button
+            class="btn tone-ink"
+            type="button"
+            role="tab"
+            id={`tab-${m.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-controls="contact-form"
+            data-mode={m.id}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+
+      <form class="form" id="contact-form" role="tabpanel" novalidate data-form>
+        <input type="hidden" name="motivo" value="showroom" data-motivo />
+
+        <div class="field">
+          <label for="f-nombre">Nombre</label>
+          <input id="f-nombre" name="nombre" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required />
+        </div>
+
+        <!-- Showroom -->
+        <div class="field" data-for="showroom">
+          <label for="f-empresa">Tienda / empresa</label>
+          <input id="f-empresa" name="empresa" type="text" />
+        </div>
+        <div class="field" data-for="showroom">
+          <label for="f-ciudad">Ciudad y país</label>
+          <input id="f-ciudad" name="ciudad" type="text" />
+        </div>
+        <div class="field field--full" data-for="showroom">
+          <label for="f-visita">Fecha preferida de visita</label>
+          <input id="f-visita" name="fecha_visita" type="text" placeholder="Mes o semana aproximada" />
+        </div>
+
+        <!-- Colaboración -->
+        <div class="field" data-for="colaboracion" hidden>
+          <label for="f-tipo">Tipo de colaboración</label>
+          <select id="f-tipo" name="tipo_colaboracion">
+            <option>Editorial / prensa</option>
+            <option>Estilismo</option>
+            <option>Marca / proyecto</option>
+            <option>Otra</option>
+          </select>
+        </div>
+        <div class="field" data-for="colaboracion" hidden>
+          <label for="f-enlace">Instagram o portfolio</label>
+          <input id="f-enlace" name="enlace" type="text" />
+        </div>
+
+        <!-- Información -->
+        <div class="field field--full" data-for="informacion" hidden>
+          <label for="f-asunto">Asunto</label>
+          <select id="f-asunto" name="asunto">
+            <option>Prensa</option>
+            <option>Pedidos y envíos</option>
+            <option>Piezas a medida</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div class="field field--full">
+          <label for="f-mensaje">Mensaje</label>
+          <textarea id="f-mensaje" name="mensaje" required></textarea>
+        </div>
+
+        <div class="form__actions">
+          <button class="btn tone-solid" type="submit">Enviar</button>
+          <p class="form__status" role="status" aria-live="polite" data-status></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-contact]');
+  if (root) {
+    const blurbs: Record<string, string> = {
+      showroom: 'Para tiendas y compradores que quieran ver la colección en persona.',
+      colaboracion: 'Cuéntanos tu proyecto y por qué encaja con DELTELL.',
+      informacion: 'Prensa, pedidos, piezas a medida o cualquier duda.',
+    };
+    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-mode]');
+    const groups = root.querySelectorAll<HTMLElement>('[data-for]');
+    const motivo = root.querySelector<HTMLInputElement>('[data-motivo]')!;
+    const blurb = root.querySelector<HTMLElement>('[data-contact-blurb]')!;
+    const form = root.querySelector<HTMLFormElement>('[data-form]')!;
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+
+    const setMode = (mode: string) => {
+      motivo.value = mode;
+      blurb.textContent = blurbs[mode];
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.mode === mode)));
+      groups.forEach((g) => {
+        const on = g.dataset.for === mode;
+        g.hidden = !on;
+        // Los campos ocultos no se envían ni se validan
+        g.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input,select').forEach(
+          (el) => (el.disabled = !on),
+        );
+      });
+      status.textContent = '';
+    };
+
+    tabs.forEach((t) => t.addEventListener('click', () => setMode(t.dataset.mode!)));
+    // Permite enlazar /contacto#showroom, #colaboracion, #informacion
+    const initial = location.hash.slice(1);
+    setMode(blurbs[initial] ? initial : 'showroom');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      // TODO: conectar a un servicio real (Resend / Formspree / Web3Forms).
+      // Por ahora solo simula el envío para poder enseñar el flujo al cliente.
+      status.textContent = 'Gracias, hemos recibido tu mensaje.';
+      form.reset();
+      setMode(motivo.value);
+    });
+  }
+</script>
