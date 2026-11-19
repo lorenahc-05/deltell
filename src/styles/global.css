@@ -943,7 +943,7 @@ html.intro .brand {
   }
   .spine {
     flex: 0 0 auto;
-    height: clamp(112px, 18svh, 170px);
+    height: clamp(80px, 12svh, 104px);
   }
   .spine__bg {
     transform: none;
