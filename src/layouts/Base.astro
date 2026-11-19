@@ -37,7 +37,11 @@ const fullTitle = title ? `${title} — DELTELL` : 'DELTELL';
         var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
         var forced = location.search.indexOf('intro') > -1; // ?intro fuerza la intro
         var seen = sessionStorage.getItem('deltell-intro') === '1';
-        if (home && !reduce && (forced || !seen)) d.classList.add('intro');
+        if (home && !reduce && (forced || !seen)) {
+          d.classList.add('intro');
+          // Seguridad: si el JS de la intro no arranca, no dejamos la pantalla en blanco
+          window.__introTimer = setTimeout(function () { d.classList.remove('intro'); }, 5000);
+        }
       } catch (e) {}
     </script>
   </head>

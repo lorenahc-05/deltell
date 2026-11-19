@@ -359,10 +359,11 @@ main {
 html.intro .intro-overlay {
   display: block;
 }
-html.intro body {
-  overflow: hidden;
-}
+/* En la intro el header ya nace en su versión fina (es el destino del logo) y
+   transparente: el JS lo va blanqueando según se hace scroll. */
 html.intro .site-header {
+  --logo-size: clamp(1.2rem, 1.7vw, 1.45rem);
+  height: var(--header-h-thin);
   background: transparent;
 }
 /* El logo real del header se esconde hasta que el JS lo coloca en el centro */
@@ -402,30 +403,14 @@ html.intro .brand {
 /* ==========================================================================
    HOME · HERO
    ========================================================================== */
+/* Pantalla completa desde el borde superior: el header (transparente en la
+   intro, blanco después) se superpone encima. */
 .hero {
   position: relative;
-  margin-top: var(--header-h);
-  height: calc(100vh - var(--header-h));
-  height: calc(100svh - var(--header-h));
-  background: var(--placeholder);
+  height: 100vh;
+  height: 100svh;
+  background: #1a1a1a; /* mientras carga el vídeo, nunca un hueco claro */
   overflow: hidden;
-}
-.hero__ph {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: var(--gutter);
-  color: var(--ink-soft);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  background: repeating-linear-gradient(
-    135deg,
-    transparent 0 22px,
-    rgba(13, 13, 13, 0.035) 22px 23px
-  );
 }
 .hero__video {
   position: absolute;

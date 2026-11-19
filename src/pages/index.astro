@@ -15,10 +15,8 @@ const tiles = [
   <main>
     <!-- 1 · Portada a pantalla completa -->
     <section class="hero" aria-label="Portada">
-      <div class="hero__ph">Vídeo de portada · public/video/hero.mp4</div>
-      <video class="hero__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-        <source src="/video/hero.mp4" type="video/mp4" />
-      </video>
+      <!-- El src se asigna desde site.ts: vertical en móvil, horizontal en escritorio -->
+      <video class="hero__video" data-hero-video muted loop playsinline preload="auto" aria-hidden="true"></video>
       <span class="hero__scroll">Scroll ↓</span>
     </section>
 
