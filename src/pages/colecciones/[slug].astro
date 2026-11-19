@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import CollectionHero from '../../components/CollectionHero.astro';
 import { collections } from '../../data/collections';
 import type { Block } from '../../data/collections';
 
@@ -20,11 +21,12 @@ const blockStyle = (b: Block) => `--col:${b.col}`;
 ---
 
 <Base title={collection.name} description={collection.lead}>
-  <main class="page">
+  <main>
+    <!-- Portada a pantalla completa (vídeo o transición con scroll) -->
+    <CollectionHero collection={collection} />
+
     <header class="story-hero">
       <a class="link-arrow" href="/colecciones">← Colecciones</a>
-      <p class="eyebrow">{collection.season}</p>
-      <h1 class="display">{collection.name}</h1>
       <p class="story-hero__lead">{collection.lead}</p>
     </header>
 

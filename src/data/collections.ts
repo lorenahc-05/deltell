@@ -36,10 +36,28 @@ export type Block =
       offset?: Offset;
     };
 
+/** Portada de la colección: siempre ocupa toda la pantalla. Dos formatos: */
+export type Hero =
+  | {
+      /** Vídeo en bucle a pantalla completa. */
+      type: 'video';
+      src: string;
+      /** Versión vertical para móvil (opcional; si no, se usa `src`). */
+      srcMobile?: string;
+      poster?: string;
+    }
+  | {
+      /** Transición con scroll: al bajar, cada foto "sube" y cubre a la anterior. */
+      type: 'scroll';
+      /** Fotos en orden. Sin `src` se pinta un placeholder con el color `tone`. */
+      slides: { src?: string; alt?: string; tone?: string }[];
+    };
+
 export interface Collection {
   slug: string;
   name: string;
   season: string;
+  hero: Hero;
   /** Foto detalle de las telas (lomo en el listado). Sin foto → textura placeholder. */
   fabric?: string;
   /** Color del placeholder del lomo. */
@@ -84,10 +102,16 @@ const sampleBlocks = (): Block[] => [
   },
 ];
 
+// Hero de ejemplo con transición de scroll (3 fotos placeholder).
+const sampleScrollHero = (tone: string): Hero => ({
+  type: 'scroll',
+  slides: [{ tone }, { tone: '#1c1c1c' }, { tone: '#b8456f' }],
+});
+
 export const collections: Collection[] = [
-  { slug: 'coleccion-01', name: 'Colección 01', season: 'Temporada', tone: '#5a1a2c', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
-  { slug: 'coleccion-02', name: 'Colección 02', season: 'Temporada', tone: '#1c1c1c', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
-  { slug: 'coleccion-03', name: 'Colección 03', season: 'Temporada', tone: '#7d8388', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
-  { slug: 'coleccion-04', name: 'Colección 04', season: 'Temporada', tone: '#b8456f', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
-  { slug: 'coleccion-05', name: 'Colección 05', season: 'Temporada', tone: '#b9a791', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
+  { slug: 'coleccion-01', name: 'Colección 01', season: 'Temporada', hero: sampleScrollHero('#5a1a2c'), tone: '#5a1a2c', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
+  { slug: 'coleccion-02', name: 'Colección 02', season: 'Temporada', hero: { type: 'video', src: '/video/colecciones/coleccion-02.mp4' }, tone: '#1c1c1c', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
+  { slug: 'coleccion-03', name: 'Colección 03', season: 'Temporada', hero: sampleScrollHero('#7d8388'), tone: '#7d8388', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
+  { slug: 'coleccion-04', name: 'Colección 04', season: 'Temporada', hero: { type: 'video', src: '/video/colecciones/coleccion-04.mp4' }, tone: '#b8456f', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
+  { slug: 'coleccion-05', name: 'Colección 05', season: 'Temporada', hero: sampleScrollHero('#b9a791'), tone: '#b9a791', lead: 'Frase corta de la colección.', blocks: sampleBlocks() },
 ];
