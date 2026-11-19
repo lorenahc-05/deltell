@@ -475,7 +475,6 @@ html.intro .brand {
   padding: clamp(10px, 2cqw, 28px);
   border: 1px solid;
   overflow: hidden;
-  transition: background 0.4s var(--ease), color 0.4s var(--ease);
 }
 .tile__top {
   display: flex;
@@ -492,23 +491,40 @@ html.intro .brand {
   line-height: 0.95;
   letter-spacing: -0.015em;
 }
+/* Hover editorial: sin cambios de color. El título "rueda" hacia arriba y
+   es sustituido por su copia (efecto marquesina), y la flecha sale en diagonal. */
+.tile__title {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em; /* no cortar los trazos que bajan */
+  margin-bottom: -0.1em;
+}
+.tile__roll {
+  position: relative;
+  display: block;
+  transition: transform 0.8s var(--ease-out);
+}
+.tile__roll::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.16em);
+  width: 100%;
+}
 .tile__arrow {
-  transition: transform 0.45s var(--ease-out);
+  display: inline-block;
+  transition: transform 0.6s var(--ease-out);
 }
-.tile:hover .tile__arrow {
-  transform: translate(4px, -4px);
+@media (hover: hover) {
+  .tile:hover .tile__roll {
+    transform: translateY(calc(-100% - 0.16em));
+  }
+  .tile:hover .tile__arrow {
+    transform: translate(6px, -6px) scale(1.5);
+  }
 }
-.tile.tone-ink:hover {
-  background: var(--ink);
-  color: #fff;
-}
-.tile.tone-outline:hover {
-  background: var(--pink);
-  color: #fff;
-}
-.tile.tone-solid:hover {
-  background: var(--paper);
-  color: var(--pink);
+.tile:focus-visible .tile__roll {
+  transform: translateY(calc(-100% - 0.16em));
 }
 @media (max-width: 899px) {
   .tile__top {
