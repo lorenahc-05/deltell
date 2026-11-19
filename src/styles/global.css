@@ -469,6 +469,10 @@ html.intro .brand {
 .tile:nth-child(-n + 2) {
   border-bottom: 1px solid var(--ink);
 }
+/* La línea entre 01 y 02 va en rosa */
+.tile:nth-child(1) {
+  border-right-color: var(--pink);
+}
 .tile__top {
   display: flex;
   justify-content: space-between;
