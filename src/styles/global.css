@@ -448,19 +448,27 @@ html.intro .brand {
 /* ==========================================================================
    HOME · CUADRÍCULA 2x2
    ========================================================================== */
+/* La cuadrícula ocupa siempre una pantalla (menos el header fino) y es 2x2
+   en cualquier dispositivo; los textos se escalan con el tamaño de cada celda. */
 .tiles {
-  padding: var(--gap) var(--gutter) 0;
+  height: calc(100vh - var(--header-h-thin));
+  height: calc(100svh - var(--header-h-thin));
+  min-height: 420px;
+  padding: var(--gap) var(--gutter);
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template: 1fr 1fr / 1fr 1fr;
   gap: var(--gap);
+  scroll-margin-top: var(--header-h-thin);
 }
 .tile {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  aspect-ratio: 16 / 11;
-  padding: clamp(12px, 2vw, 28px);
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+  padding: clamp(10px, 2cqw, 28px);
   border: 1px solid;
   overflow: hidden;
   transition: background 0.4s var(--ease), color 0.4s var(--ease);
@@ -476,7 +484,7 @@ html.intro .brand {
 }
 .tile__title {
   font-family: var(--serif);
-  font-size: clamp(1.9rem, 6.2vw, 6.5rem);
+  font-size: clamp(1.15rem, min(17cqw, 24cqh), 7rem);
   line-height: 0.95;
   letter-spacing: -0.015em;
 }
@@ -499,10 +507,11 @@ html.intro .brand {
   color: var(--pink);
 }
 @media (max-width: 899px) {
-  .tile {
-    aspect-ratio: 4 / 5;
+  .tile__top {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
   }
-  .tile__top span:last-child {
+  .tile__top span:last-child:not(.tile__arrow) {
     display: none;
   }
 }
