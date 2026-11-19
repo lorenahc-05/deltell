@@ -527,6 +527,10 @@ html.intro .brand {
   .tile__top span:last-child:not(.tile__arrow) {
     display: none;
   }
+  /* En móvil la flecha se pinta como emoji: fuera */
+  .tile__arrow {
+    display: none;
+  }
 }
 
 /* ==========================================================================
