@@ -455,6 +455,10 @@ html.intro .brand {
   height: calc(100svh - var(--header-h-thin));
   min-height: 420px;
   padding: var(--gap) var(--gutter);
+  /* En ordenador: más apaisada, nunca más alta que la pantalla */
+  @media (min-width: 900px) {
+    height: clamp(420px, 38vw, calc(100svh - var(--header-h-thin)));
+  }
   display: grid;
   grid-template: 1fr 1fr / 1fr 1fr;
   gap: var(--gap);
@@ -484,7 +488,7 @@ html.intro .brand {
 }
 .tile__title {
   font-family: var(--serif);
-  font-size: clamp(1.15rem, min(17cqw, 24cqh), 7rem);
+  font-size: clamp(1.15rem, min(17cqw, 22cqh, 5.2rem), 7rem);
   line-height: 0.95;
   letter-spacing: -0.015em;
 }
