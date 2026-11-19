@@ -531,6 +531,15 @@ html.intro .brand {
   .tile__top span:last-child:not(.tile__arrow) {
     display: none;
   }
+  /* En móvil las celdas son cuadrados perfectos y la sección no llena la pantalla */
+  .tiles {
+    height: auto;
+    min-height: 0;
+    grid-template: auto auto / 1fr 1fr;
+  }
+  .tile {
+    aspect-ratio: 1 / 1;
+  }
   /* En móvil la flecha se pinta como emoji: fuera */
   .tile__arrow {
     display: none;
