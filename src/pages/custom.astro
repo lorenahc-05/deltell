@@ -1,12 +1,154 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const pieces = ['Vestido', 'Chaqueta', 'Abrigo', 'Falda', 'Pantalón', 'Conjunto', 'Otra cosa'];
+const budgets = ['Tengo un presupuesto', 'Aún no lo sé', 'Prefiero hablarlo'];
+const contacts = ['Email', 'WhatsApp', 'Llamada'];
 ---
 
-<Base title="Custom">
+<Base title="Custom" description="Piezas a medida por encargo, diseñadas contigo por DELTELL.">
   <main class="page">
-    <div class="page-hero">
-      <h1 class="display">Custom</h1>
-      <p>Página en construcción. Aquí irá el servicio de piezas a medida.</p>
+    <div class="custom">
+      <!-- Izquierda: vídeo de la diseñadora bocetando (se queda fijo mientras se rellena el formulario) -->
+      <aside class="custom__media" aria-label="Vídeo de la diseñadora bocetando">
+        <div class="custom__ph">Vídeo de la diseñadora bocetando · public/video/custom.mp4</div>
+        <video class="custom__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+          <source src="/video/custom.mp4" type="video/mp4" />
+        </video>
+      </aside>
+
+      <!-- Derecha: formulario de encargo -->
+      <section class="custom__form" aria-labelledby="custom-title">
+        <p class="eyebrow">A medida · Por encargo</p>
+        <h1 class="display" id="custom-title">Custom</h1>
+        <p class="custom__intro">
+          Cada pieza custom empieza con una conversación. Cuéntanos qué tienes en la cabeza y la
+          diseñamos contigo.
+        </p>
+
+        <form class="cform" novalidate data-custom-form>
+          <!-- 01 -->
+          <fieldset class="cstep">
+            <legend><span>01</span> Empecemos por ti</legend>
+            <p class="sentence">
+              Hola, soy
+              <label class="blank"><span class="visually-hidden">Tu nombre</span>
+                <input name="nombre" type="text" placeholder="tu nombre" autocomplete="name" required />
+              </label>
+              y la necesito para
+              <label class="blank"><span class="visually-hidden">Ocasión</span>
+                <input name="ocasion" type="text" placeholder="una boda, una gala…" />
+              </label>
+              antes del
+              <label class="blank"><span class="visually-hidden">Fecha límite</span>
+                <input name="fecha" type="text" placeholder="una fecha" />
+              </label>.
+            </p>
+          </fieldset>
+
+          <!-- 02 -->
+          <fieldset class="cstep">
+            <legend><span>02</span> La pieza</legend>
+            <div class="chips" role="radiogroup" aria-label="Tipo de pieza">
+              {pieces.map((p, i) => (
+                <label class="chip">
+                  <input type="radio" name="pieza" value={p} required={i === 0} />
+                  <span>{p}</span>
+                </label>
+              ))}
+            </div>
+            <div class="field field--full">
+              <label for="c-idea">Cuéntame la idea</label>
+              <textarea id="c-idea" name="idea" placeholder="Cómo la imaginas, colores, telas, a quién va dirigida…"></textarea>
+            </div>
+          </fieldset>
+
+          <!-- 03 -->
+          <fieldset class="cstep">
+            <legend><span>03</span> Inspiración</legend>
+            <label class="drop" for="c-files">
+              <span class="drop__title">Añade fotos o bocetos</span>
+              <span class="drop__hint" data-files-hint>Arrastra aquí o pulsa para elegir</span>
+              <input id="c-files" name="referencias" type="file" accept="image/*,.pdf" multiple />
+            </label>
+            <div class="field field--full">
+              <label for="c-link">O un enlace (Pinterest, Instagram…)</label>
+              <input id="c-link" name="enlace" type="text" />
+            </div>
+          </fieldset>
+
+          <!-- 04 -->
+          <fieldset class="cstep">
+            <legend><span>04</span> Presupuesto</legend>
+            <div class="chips" role="radiogroup" aria-label="Presupuesto">
+              {budgets.map((b) => (
+                <label class="chip">
+                  <input type="radio" name="presupuesto" value={b} />
+                  <span>{b}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <!-- 05 -->
+          <fieldset class="cstep">
+            <legend><span>05</span> ¿Cómo te escribimos?</legend>
+            <div class="cform__row">
+              <div class="field">
+                <label for="c-email">Email</label>
+                <input id="c-email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="c-tel">Teléfono (opcional)</label>
+                <input id="c-tel" name="telefono" type="tel" autocomplete="tel" />
+              </div>
+            </div>
+            <div class="chips" role="radiogroup" aria-label="Preferencia de contacto">
+              {contacts.map((c) => (
+                <label class="chip">
+                  <input type="radio" name="contacto" value={c} />
+                  <span>{c}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label class="consent">
+            <input type="checkbox" name="privacidad" required />
+            <span>He leído y acepto la <a href="#">política de privacidad</a>.</span>
+          </label>
+
+          <div class="form__actions">
+            <button class="btn tone-solid cform__submit" type="submit">Enviar encargo</button>
+            <p class="form__status" role="status" aria-live="polite" data-status></p>
+          </div>
+        </form>
+      </section>
     </div>
   </main>
 </Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-custom-form]');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const files = form.querySelector<HTMLInputElement>('#c-files')!;
+    const hint = form.querySelector<HTMLElement>('[data-files-hint]')!;
+    const idle = hint.textContent ?? '';
+
+    files.addEventListener('change', () => {
+      const n = files.files?.length ?? 0;
+      hint.textContent = n ? `${n} archivo${n > 1 ? 's' : ''} seleccionado${n > 1 ? 's' : ''}` : idle;
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      // TODO: conectar a un servicio real (Resend / Formspree / Web3Forms) incluyendo los archivos.
+      // Por ahora solo simula el envío para poder enseñar el flujo al cliente.
+      status.textContent = 'Gracias. Hemos recibido tu encargo y te escribiremos pronto.';
+      form.reset();
+      hint.textContent = idle;
+    });
+  }
+</script>
