@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import { collections } from '../../data/collections';
+import type { Block } from '../../data/collections';
+
+export function getStaticPaths() {
+  return collections.map((c, i) => ({
+    params: { slug: c.slug },
+    props: {
+      collection: c,
+      prev: collections[(i - 1 + collections.length) % collections.length],
+      next: collections[(i + 1) % collections.length],
+    },
+  }));
+}
+
+const { collection, prev, next } = Astro.props;
+
+const blockStyle = (b: Block) => `--col:${b.col}`;
+---
+
+<Base title={collection.name} description={collection.lead}>
+  <main class="page">
+    <header class="story-hero">
+      <a class="link-arrow" href="/colecciones">← Colecciones</a>
+      <p class="eyebrow">{collection.season}</p>
+      <h1 class="display">{collection.name}</h1>
+      <p class="story-hero__lead">{collection.lead}</p>
+    </header>
+
+    <!-- Relato editorial: textos y fotos alternados sobre fondo blanco -->
+    <div class="story">
+      {collection.blocks.map((b) => {
+        if (b.type === 'text') {
+          return (
+            <div class={`story__item story__text off-${b.offset ?? 'none'}`} style={blockStyle(b)} data-reveal>
+              {b.heading && <h2 class="display">{b.heading}</h2>}
+              {b.paragraphs.map((p) => <p>{p}</p>)}
+            </div>
+          );
+        }
+        if (b.type === 'quote') {
+          return (
+            <blockquote class={`story__item story__quote display off-${b.offset ?? 'none'}`} style={blockStyle(b)} data-reveal>
+              {b.text}
+            </blockquote>
+          );
+        }
+        return (
+          <figure class={`story__item story__image off-${b.offset ?? 'none'}`} style={blockStyle(b)} data-reveal>
+            <div class="ph" style={`aspect-ratio:${(b.ratio ?? '4/5').replace('/', ' / ')}`}>
+              {b.src && <img src={b.src} alt={b.alt ?? ''} loading="lazy" />}
+            </div>
+            {b.caption && <figcaption>{b.caption}</figcaption>}
+          </figure>
+        );
+      })}
+    </div>
+
+    <nav class="story-nav" aria-label="Otras colecciones">
+      <a href={`/colecciones/${prev.slug}`}>
+        <span class="eyebrow">← Anterior</span>
+        <span class="display">{prev.name}</span>
+      </a>
+      <a href={`/colecciones/${next.slug}`}>
+        <span class="eyebrow">Siguiente →</span>
+        <span class="display">{next.name}</span>
+      </a>
+    </nav>
+  </main>
+</Base>

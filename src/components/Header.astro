@@ -23,7 +23,7 @@ const links = [
 
   <nav class="nav nav--left" aria-label="Principal">
     {links.map((l) => (
-      <a class="nav__link" href={l.href} aria-current={current === l.href ? 'page' : undefined}>
+      <a class="nav__link" href={l.href} aria-current={current === l.href || current.startsWith(l.href + '/') ? 'page' : undefined}>
         {l.label}
       </a>
     ))}

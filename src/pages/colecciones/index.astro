@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import { collections } from '../../data/collections';
+---
+
+<Base title="Colecciones" description="Archivo de colecciones de DELTELL.">
+  <main class="page">
+    <header class="coll-hero">
+      <h1 class="display">Colecciones</h1>
+      <span class="eyebrow">({String(collections.length).padStart(2, '0')})</span>
+    </header>
+
+    <!-- Lomos: cada colección es una fila de lado a lado. Al pasar el ratón se abre. -->
+    <nav class="spines" style={`--n:${collections.length}`} aria-label="Colecciones">
+      {collections.map((c) => (
+        <a
+          class="spine"
+          href={`/colecciones/${c.slug}`}
+          style={`--tone:${c.tone};${c.fabric ? `--img:url('${c.fabric}');` : ''}`}
+        >
+          <span class="spine__bg" aria-hidden="true"></span>
+          <span class="spine__meta spine__meta--l">{c.season}</span>
+          <span class="spine__name">{c.name}</span>
+          <span class="spine__meta spine__meta--r">Ver colección</span>
+        </a>
+      ))}
+    </nav>
+  </main>
+</Base>
